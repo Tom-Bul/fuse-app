@@ -10,6 +10,7 @@ export const submitRegister = ({ username, password }) => async dispatch => {
 		})
 		.then(user => {
 			dispatch(setUserData(user));
+			window.location.reload();
 			return dispatch(registerSuccess());
 		})
 		.catch(error => {
