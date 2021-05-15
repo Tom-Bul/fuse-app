@@ -50,24 +50,26 @@ class JwtService extends FuseUtils.EventEmitter {
 		const newUser = {
 			username: data.username,
 			password: data.password
-		}
+		};
 		return new Promise((resolve, reject) => {
-			axios
-				.post('http://gn-test.crem.pl/auth/sign-up', newUser)
-				.then(response => {
-					console.log(response)
-					axios
-						.post('http://gn-test.crem.pl/auth/sign-in', newUser)
-						.then(response => {
+			axios.post('http://gn-test.crem.pl/auth/sign-up', newUser).then(
+				response => {
+					console.log(response);
+					axios.post('http://gn-test.crem.pl/auth/sign-in', newUser).then(
+						response => {
 							this.setSession(response.data.token);
-							resolve(response.data)
-						}, error => {
+							resolve(response.data);
+						},
+						error => {
 							reject(error.response.data.error);
-						})
-				}, err => {
-					reject(err.response)
-					return err.response.data.error
-				})
+						}
+					);
+				},
+				err => {
+					reject(err.response);
+					return err.response.data.error;
+				}
+			);
 		});
 	};
 
@@ -76,23 +78,26 @@ class JwtService extends FuseUtils.EventEmitter {
 			const newUser = {
 				username: username,
 				password: password
-			}
-			axios.post('http://gn-test.crem.pl/auth/sign-in', newUser).then(response => {
-				this.setSession(response.data.token);
-				resolve(response.data)
-			}, error => {
-				reject(error.response.data.error);
-			})
+			};
+			axios.post('http://gn-test.crem.pl/auth/sign-in', newUser).then(
+				response => {
+					this.setSession(response.data.token);
+					resolve(response.data);
+				},
+				error => {
+					reject(error.response.data.error);
+				}
+			);
 		});
 	};
 
 	signInWithToken = () => {
-		const token = this.getAccessToken()
+		const token = this.getAccessToken();
 
 		return new Promise((resolve, reject) => {
 			if (!token) {
 				this.logout();
-				reject(new Error('Failed to login with token.'))
+				reject(new Error('Failed to login with token.'));
 			}
 
 			const decoded = jwtDecode(token);
